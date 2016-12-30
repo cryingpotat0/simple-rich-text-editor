@@ -29,7 +29,7 @@ Skeleton code taken from https://code.tutsplus.com/tutorials/create-a-wysiwyg-ed
         </script>
       ```
   4. textEditor.init takes an argument for toolbar display items. You can pass these options in as an array.
-     eg: textEditor.init(["forecolor", "backcolor", "unlink", "insertimage"]);  
+     eg: ```textEditor.init(["forecolor", "backcolor", "unlink", "insertimage"]);  ```  
      The items are inserted in the order shown. For a full set of options, go to texteditor.js and look at TextEditor.Prototype.toolbarElements. 
 
 #Issues to be fixed
