@@ -1,20 +1,21 @@
 var TextEditor = function(containerName) {
   this.name = containerName;
-  this.init = function(toolbarOptions) {
-    this.buildFramework();
 
-    this.colorPalette = ['000000', 'FF9966', '6699FF', '99FF66', 'CC0000', '00CC00', '0000CC', '333333', '0066FF', 'FFFFFF'];
-    this.toolbarOptions = toolbarOptions || ["undo", "redo", "bold", "forecolor", "insertimage"];
-    this.buildToolbar();
+  this.init = function(toolbarOptions) {
+    this.buildFramework().buildToolbar(toolbarOptions);
+    return this;
   }
 
 
-  this.buildToolbar = function() {
+  this.buildToolbar = function(toolbarOptions) {
+    this.colorPalette = ['000000', 'FF9966', '6699FF', '99FF66', 'CC0000', '00CC00', '0000CC', '333333', '0066FF', 'FFFFFF'];
+    this.toolbarOptions = toolbarOptions || ["undo", "redo", "bold", "forecolor", "insertimage"];
     var appendString = '';
     for(var option of this.toolbarOptions) {
       appendString += this.toolbarElements[option];
     };
     $(this.name + ' .toolbar').append(appendString);
+    return this;
   }
 
   this.show = function() {
@@ -48,7 +49,10 @@ var TextEditor = function(containerName) {
         document.execCommand($(this).data('command'), false, url);
       } else document.execCommand($(this).data('command'), false, null);
     });
+
+    return this;
   }
+
 }
 
 TextEditor.prototype.toolbarElements = {
@@ -56,12 +60,12 @@ TextEditor.prototype.toolbarElements = {
   redo: '<a href="#" data-command="redo"><i class="fa fa-repeat"></i></a>',
   forecolor: '<div class="fore-wrapper"><i class="fa fa-font" style="color:#C96;"></i>'
     +'<div class="fore-palette">'
-    +'</div>'
+    +  '</div>'
     +'</div>',
 
   backcolor:  '<div class="back-wrapper"><i class="fa fa-font" style="background:#C96;"></i>'
     +'<div class="back-palette">'
-    +'</div>'
+    +  '</div>'
     +'</div>',
   bold: '<a href="#" data-command="bold"><i class="fa fa-bold"></i></a>',
   italic: '<a href="#" data-command="italic"><i class="fa fa-italic"></i></a>',
@@ -94,4 +98,5 @@ TextEditor.prototype.buildFramework = function() {
       +   '<p>Try making some changes here. Add your own text or maybe an image.</p>'
       + '</div>'
   );
+  return this;
 }
