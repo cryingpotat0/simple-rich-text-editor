@@ -13,15 +13,19 @@ Skeleton code taken from https://code.tutsplus.com/tutorials/create-a-wysiwyg-ed
   1. Add html for the container within which you want the TextEditor. 
       eg:  
       ``` 
-        <div class = "main-container"></div> 
+        <div class = "main-container"></div>  
       ```
   2. Include jQuery and texteditor.js in your html file in that order
   3. Call a script tag as so after the two previous script tags  
-      ```
+      ``` 
         <script>  
+        
           var textEditor = new TextEditor('.main-container'); //Note the . indicating the class name  
+          
           textEditor.init();  
+          
           textEditor.show();  
+          
         </script>
       ```
   4. textEditor.init takes an argument for toolbar display items. You can pass these options in as an array.
