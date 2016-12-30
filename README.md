@@ -11,16 +11,21 @@ Skeleton code taken from https://code.tutsplus.com/tutorials/create-a-wysiwyg-ed
 #Progress
 1. Created an object TextEditor which can be flexibly used to rapidly generate multiple rich-text editors. To do so, follow these steps: 
   1. Add html for the container within which you want the TextEditor. 
-      eg: <div class = "main-container"></div>
+      eg: 
+      ```html 
+        <div class = "main-container"></div> 
+      ```
   2. Include jQuery and texteditor.js in your html file in that order
   3. Call a script tag as so after the two previous script tags
-      <script>
-        var textEditor = new TextEditor('.main-container'); //Note the . indicating the class name
-        textEditor.init();
-        textEditor.show();
-      </script>
+      ```html
+        <script>
+          var textEditor = new TextEditor('.main-container'); //Note the . indicating the class name
+          textEditor.init();
+          textEditor.show();
+        </script>
+      ```
   4. textEditor.init takes an argument for toolbar display items. You can pass these options in as an array.
-     eg: textEditor.init(["forecolor", "backcolor", "unlink", "insertimage"]);
+     eg: textEditor.init(["forecolor", "backcolor", "unlink", "insertimage"]);  
      The items are inserted in the order shown. For a full set of options, go to texteditor.js and look at TextEditor.Prototype.toolbarElements. 
 
 #Issues to be fixed
