@@ -11,13 +11,13 @@ Skeleton code taken from https://code.tutsplus.com/tutorials/create-a-wysiwyg-ed
 #Progress
 1. Created an object TextEditor which can be flexibly used to rapidly generate multiple rich-text editors. To do so, follow these steps: 
   1. Add html for the container within which you want the TextEditor. 
-      eg: 
-      ```html 
+      eg:   
+      ``` 
         <div class = "main-container"></div> 
       ```
   2. Include jQuery and texteditor.js in your html file in that order
-  3. Call a script tag as so after the two previous script tags
-      ```html
+  3. Call a script tag as so after the two previous script tags  
+      ```
         <script>
           var textEditor = new TextEditor('.main-container'); //Note the . indicating the class name
           textEditor.init();
