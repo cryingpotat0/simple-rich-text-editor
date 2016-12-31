@@ -1,5 +1,39 @@
 var TextEditor = function(containerName) {
   //PROTOTYPE FUNCTIONS
+  TextEditor.prototype.persistData = function(data) {
+    $(this.name + ' #editor').append(data);
+    var _this = this;
+    var parsed = $.parseHTML(data);
+    var codeflask_objects = { }
+    for (var elem of parsed) {
+      if (elem.className == 'CodeFlask') {
+        var curr_lang = _this.getFlaskLanguage(elem)
+        if (curr_lang === 'STOP') { break; }
+        if (curr_lang === 'javascript') { curr_lang = 'js'; }
+        codeflask_objects[elem.id] = curr_lang;
+      }
+    }
+    for (var codeflask in codeflask_objects) {
+      var flask = new CodeFlask;
+      flask.runAll('#' + codeflask, {language: codeflask_objects[codeflask]});
+    }
+  }
+
+  TextEditor.prototype.getFlaskLanguage = function(elem) {
+    try {
+      for (var child of elem.children) {
+        if (child.classList.contains('CodeFlask__pre')) {
+          for (className of child.classList) {
+            if(className.indexOf('language') !== -1) {
+              return className.slice(9);
+            }
+          }
+        }
+      }
+    } 
+    catch(e) { return 'STOP' }
+  }
+
   TextEditor.prototype.addCodelinkListeners = function() {
     var _this = this;
     $('.code-wrapper').hover(function(){
@@ -11,10 +45,10 @@ var TextEditor = function(containerName) {
   }
 
   TextEditor.prototype.createCodeSelector = function() {
-    var my_elem = $('.code-palette')
-    my_elem.css('width', '100px');
+    var codePalette = $('.code-palette')
+    codePalette.css('width', '100px');
     for(var language in this.languageMap) {
-      my_elem.append('<div class = "language-link" >'+language+'</a></div>');
+      codePalette.append('<div class = "language-link" >'+language+'</a></div>');
     }
   }
 
@@ -148,7 +182,13 @@ var TextEditor = function(containerName) {
       }
     }
 
+    if(this.toolbarOptions.indexOf("code") != -1) {
+      this.createCodeSelector();
+      this.addCodelinkListeners()
+    }
+
     var _this = this;
+
     $(this.name + ' .toolbar a').click(function(e) {
       var command = $(this).data('command');
       if (command == 'h1' || command == 'h2' || command == 'p') {
@@ -160,23 +200,13 @@ var TextEditor = function(containerName) {
       if (command == 'createlink' || command == 'insertimage') {
         url = prompt('Enter the link here: ', 'http:\/\/');
         document.execCommand($(this).data('command'), false, url);
-      } 
-      if (command == 'codeblock') {
-        _this.addCodeBlock();
       } else {
         document.execCommand($(this).data('command'), false, null);
       }
     });
 
-    // NEW CODE
-
-    _this.createCodeSelector();
-    _this.addCodelinkListeners()
-    //END NEW CODE
     return this;
   }
 
-
 }
 
-//LOCAL FUNCTIONS

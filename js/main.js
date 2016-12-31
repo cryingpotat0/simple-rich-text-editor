@@ -6,3 +6,4 @@ var textEditor = new TextEditor('.main-container-2');
 var te = textEditor.init(["code", "forecolor", "backcolor", "unlink", "insertimage", "undo"]).show();
 
 
+
