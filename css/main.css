@@ -109,3 +109,17 @@ a.palette-item:hover {
   background: #FFF;
   margin-bottom: 2px;
 }
+
+//CUSTOM
+
+.codeblock textarea{
+  height: 100px !important;
+  border: 1px solid blue !important;
+  background-color: #ccc !important;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+
+
+
