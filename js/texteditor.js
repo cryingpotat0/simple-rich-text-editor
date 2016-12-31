@@ -1,39 +1,54 @@
 var TextEditor = function(containerName) {
   //PROTOTYPE FUNCTIONS
-  TextEditor.prototype.addCodeBlock = function(language) {
-    this.codeLanguage = language || 'markup';
+  TextEditor.prototype.addCodelinkListeners = function() {
+    var _this = this;
+    $('.code-wrapper').hover(function(){
+      _this.correct_range = window.getSelection().getRangeAt(0); 
+    })
+    $('.language-link').click(function() {
+      _this.addCodeBlock(_this.languageMap[$(this).text()], _this.correct_range);
+    })
+  }
+
+  TextEditor.prototype.createCodeSelector = function() {
+    var my_elem = $('.code-palette')
+    my_elem.css('width', '100px');
+    for(var language in this.languageMap) {
+      my_elem.append('<div class = "language-link" >'+language+'</a></div>');
+    }
+  }
+
+  TextEditor.prototype.addCodeBlock = function(language, range) {
+    var codeLanguage = language || 'markup';
     // get the selection range (or cursor     position)
     try {
-      var range = window.getSelection().getRangeAt(0); 
-
-      // create a span
-      var newElement = document.createElement('div');
-      strippedName = this.name.replace(/\#/g,'').replace(/\./g,'');
+      var strippedName = this.name.replace(/\#/g,'').replace(/\./g,'');
       var id = strippedName +  this.codeblock.count;
+
       this.codeblock.ids.push(id);
       this.codeblock.count = this.codeblock.count + 1;
-      //var newElement = '<div class = "codeblock" id = "' + id + '"></div>';
-      newElement.id = id;
-      //newElement.innerHTML = 'HelloWOrld';
-      range.deleteContents();
-      // place your span
-      range.insertNode(newElement);
-      //$(containerName + ' #editor').append(newElement);
-      var e = $('#'+id);
-      e.height(100);
-      e.css('border', '1px solid red');
-      e.css('border-radius', '20px');
-      e.css('margin', '5px');
 
-      var flask = new CodeFlask;
-      flask.run('#'+ id, {language: 'js'});
-      flask.update('/* Your Code Here */');
+      var newElement = document.createElement('div');
+      newElement.id = id;
+      my_parent = range.startContainer.parentNode.parentNode.id;
+      if(my_parent === "editor" || my_parent === strippedName) {
+        range.deleteContents();
+        range.insertNode(newElement);
+        var code_block = $('#'+id);
+        code_block.height(100);
+        code_block.css('border', '1px solid red');
+        code_block.css('border-radius', '20px');
+        code_block.css('margin', '5px');
+
+        var flask = new CodeFlask;
+        flask.run('#'+ id, {language: language});
+        flask.update('/* Your Code Here */');
+      }
 
     } catch(e) {
       window.alert('Please place the cursor inside the textbox');
     }
   }
-
   TextEditor.prototype.toolbarElements = {
     undo: '<a href="javascript:" data-command="undo"><i class="fa fa-undo"></i></a>',
     redo: '<a href="javascript:" data-command="redo"><i class="fa fa-repeat"></i></a>',
@@ -66,7 +81,10 @@ var TextEditor = function(containerName) {
     p: '<a href="javascript:" data-command="p">P</a>',
     subscript: '<a href="javascript:" data-command="subscript"><i class="fa fa-subscript"></i></a>',
     superscript: '<a href="javascript:" data-command="superscript"><i class="fa fa-superscript"></i></a>',
-    code: '<a href="javascript:" data-command="codeblock"><i class="fa fa-code"></i></a>'
+    code: '<div class="code-wrapper"><i class="fa fa-code" style="color:#C96;"></i>'
+      +'<div class="code-palette">'
+      +  '</div>'
+      +'</div>'//'<a href="javascript:" data-command="codeblock"><i class="fa fa-code"></i></a>'
 
   }
 
@@ -87,6 +105,12 @@ var TextEditor = function(containerName) {
   this.codeblock = { }
   this.codeblock.count = 0;
   this.codeblock.ids = []
+  this.languageMap = {
+    'Javascript': 'js',
+    'HTML/ Markup': 'markup',
+    'CSS' : 'css',
+    'Other': ''
+  }
 
   this.init = function(toolbarOptions) {
     this.buildFramework().buildToolbar(toolbarOptions);
@@ -106,6 +130,7 @@ var TextEditor = function(containerName) {
   }
 
   this.show = function() {
+
 
     if(this.toolbarOptions.indexOf("forecolor") != -1) {
       this.forePalette = $(this.name + ' .fore-palette');
@@ -143,8 +168,15 @@ var TextEditor = function(containerName) {
       }
     });
 
+    // NEW CODE
+
+    _this.createCodeSelector();
+    _this.addCodelinkListeners()
+    //END NEW CODE
     return this;
   }
 
+
 }
 
+//LOCAL FUNCTIONS

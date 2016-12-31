@@ -1,3 +1,4 @@
+
 body {
   margin: 0 auto;
   width: 600px;
@@ -24,7 +25,8 @@ a {
 
 .toolbar a,
 .fore-wrapper,
-.back-wrapper {
+.back-wrapper,
+.code-wrapper {
   border: 1px solid #AAA;
   background: #FFF;
   font-family: 'Candal';
@@ -41,7 +43,8 @@ a {
 
 .toolbar a:hover,
 .fore-wrapper:hover,
-.back-wrapper:hover {
+.back-wrapper:hover,
+.code-wrapper:hover {
   background: #f2f2f2;
   border-color: #8c8c8c;
 }
@@ -81,27 +84,31 @@ a.palette-item:hover {
 }
 
 .fore-palette,
-.back-palette {
+.back-palette,
+.code-palette {
   display: none;
 }
 
 .fore-wrapper,
-.back-wrapper {
+.back-wrapper,
+.code-wrapper {
   display: inline-block;
-  cursor: pointer;
 }
 
 .fore-wrapper:hover .fore-palette,
-.back-wrapper:hover .back-palette {
+.back-wrapper:hover .back-palette,
+.code-wrapper:hover .code-palette {
+  z-index: 1000;
   display: block;
   float: left;
   position: absolute;
+  margin-top: 5px;
   padding: 3px;
   width: 160px;
   background: #FFF;
   border: 1px solid #DDD;
   box-shadow: 0 0 5px #CCC;
-  height: 70px;
+  height: auto;
 }
 
 .fore-palette a,
@@ -110,16 +117,30 @@ a.palette-item:hover {
   margin-bottom: 2px;
 }
 
+.code-palette a {
+  background: #fff;
+  margin-bottom: 2px;
+}
 //CUSTOM
 
 .codeblock textarea{
-  height: 100px !important;
-  border: 1px solid blue !important;
-  background-color: #ccc !important;
   border-radius: 20px;
   padding: 20px;
 }
 
+.language-link:hover {
+  background-color: white !important;
+  color: #f48024 !important;
+}
 
-
-
+.language-link { 
+  cursor: pointer;
+  background-color: #f48024;
+  color: white;
+  padding: 5px;
+  border: 1px solid #f48024;
+  font-size: 13px;
+  font-family: sans-serif;
+  margin: 1px;
+  z-index: 1000;
+}
