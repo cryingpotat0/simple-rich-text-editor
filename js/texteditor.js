@@ -1,12 +1,34 @@
 var TextEditor = function(containerName) {
   //PROTOTYPE FUNCTIONS
+  TextEditor.prototype.generateN = function(n, options) {
+    var current_elem = $(this.name);
+    var current_parent = current_elem.parent();
+    this.count = n;
+    current_elem.remove();
+    for (var i=0; i<n; i++) {
+      newClass = this.name.replace(/\./g,'') + i.toString(); 
+      current_parent.append('<div class=' + newClass + '></div>');
+      var textEditor = new TextEditor('.' + newClass);
+      textEditor.init(options);
+      textEditor.show();
+    }
+  }
+
+  TextEditor.prototype.singleToolbar = function() {
+    var fixed_toolbar = $(this.name + '0 .toolbar');
+    fixed_toolbar.addClass('fixed-toolbar');
+    for (var i=1; i < this.count; i++) {
+      $(this.name + i.toString() + ' .toolbar').hide();
+    }
+  }
+
   TextEditor.prototype.persistData = function(data) {
     $(this.name + ' #editor').append(data);
     var _this = this;
     var parsed = $.parseHTML(data);
     var codeflask_objects = { }
     for (var elem of parsed) {
-      if (elem.className == 'CodeFlask') {
+      if (elem.className === 'CodeFlask') {
         var curr_lang = _this.getFlaskLanguage(elem)
         if (curr_lang === 'STOP') { break; }
         if (curr_lang === 'javascript') { curr_lang = 'js'; }
@@ -15,7 +37,7 @@ var TextEditor = function(containerName) {
     }
     for (var codeflask in codeflask_objects) {
       var flask = new CodeFlask;
-      flask.runAll('#' + codeflask, {language: codeflask_objects[codeflask]});
+      flask.run('#' + codeflask, {language: codeflask_objects[codeflask]});
     }
   }
 
@@ -36,19 +58,19 @@ var TextEditor = function(containerName) {
 
   TextEditor.prototype.addCodelinkListeners = function() {
     var _this = this;
-    $('.code-wrapper').hover(function(){
-      _this.correct_range = window.getSelection().getRangeAt(0); 
+    $(this.name + ' .toolbar .code-wrapper').hover(function(){
+      try { _this.correct_range = window.getSelection().getRangeAt(0); }
+      catch(e) { }
     })
-    $('.language-link').click(function() {
+    $(this.name + ' .toolbar .code-wrapper .code-palette .language-link').click(function() {
       _this.addCodeBlock(_this.languageMap[$(this).text()], _this.correct_range);
     })
   }
 
   TextEditor.prototype.createCodeSelector = function() {
-    var codePalette = $('.code-palette')
-    codePalette.css('width', '100px');
+    var codePalette = $(this.name + ' .toolbar .code-wrapper .code-palette')
     for(var language in this.languageMap) {
-      codePalette.append('<div class = "language-link" >'+language+'</a></div>');
+      codePalette.append('<div class = "language-link" >'+language+'</div>');
     }
   }
 
@@ -77,8 +99,9 @@ var TextEditor = function(containerName) {
         var flask = new CodeFlask;
         flask.run('#'+ id, {language: language});
         flask.update('/* Your Code Here */');
+      } else {
+        throw "Not in right box"
       }
-
     } catch(e) {
       window.alert('Please place the cursor inside the textbox');
     }
@@ -118,7 +141,7 @@ var TextEditor = function(containerName) {
     code: '<div class="code-wrapper"><i class="fa fa-code" style="color:#C96;"></i>'
       +'<div class="code-palette">'
       +  '</div>'
-      +'</div>'//'<a href="javascript:" data-command="codeblock"><i class="fa fa-code"></i></a>'
+      +'</div>'
 
   }
 
@@ -127,7 +150,6 @@ var TextEditor = function(containerName) {
       '<div class="toolbar">'
         + '</div>'
         + '<div id="editor" contenteditable>'
-      //      + '<div id="my-code-wrapper" style="height: 50px; padding:20px; border: 1px solid black"></div>'
         +   '<p>Try making some changes here. Add your own text or maybe an image.</p>'
         + '</div>'
     );
@@ -153,8 +175,10 @@ var TextEditor = function(containerName) {
 
 
   this.buildToolbar = function(toolbarOptions) {
+
     this.colorPalette = ['000000', 'FF9966', '6699FF', '99FF66', 'CC0000', '00CC00', '0000CC', '333333', '0066FF', 'FFFFFF'];
     this.toolbarOptions = toolbarOptions || ["undo", "redo", "bold", "forecolor", "insertimage"];
+
     var appendString = '';
     for(var option of this.toolbarOptions) {
       appendString += this.toolbarElements[option];

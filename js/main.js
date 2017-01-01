@@ -1,9 +1,10 @@
-var textEditor = new TextEditor('.main-container');
-textEditor.init();
-textEditor.show();
 
 var textEditor = new TextEditor('.main-container-2');
-var te = textEditor.init(["code", "forecolor", "backcolor", "unlink", "insertimage", "undo"]).show();
+//textEditor.init();
+//textEditor.show()
+textEditor.generateN(6, ["code", "forecolor", "backcolor", "unlink", "insertimage", "undo"]);
+textEditor.singleToolbar();
+
 
 
 
