@@ -186,3 +186,4 @@ CodeFlask.prototype.update = function(string) {
     evt.initEvent("input", false, true);
     this.textarea.dispatchEvent(evt);
 }
+

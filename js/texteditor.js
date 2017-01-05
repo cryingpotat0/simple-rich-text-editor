@@ -1,5 +1,39 @@
 var TextEditor = function(containerName) {
   //PROTOTYPE FUNCTIONS
+  TextEditor.prototype.persistDataN = function(n, data) {
+    for (var i=0; i < n; i++) {
+      var className = this.name + i.toString();
+      var textEditor = new TextEditor(className);
+      textEditor.persistData(data[i]);
+    }
+    return this
+  }
+
+  TextEditor.prototype.displayMode = function() {
+    jQuery('.toolbar').hide();
+    jQuery('#editor').removeAttr('contenteditable');
+    return this;
+  }
+
+  TextEditor.prototype.makeEditable = function() {
+    jQuery(this.name + '0 .toolbar').show();
+    jQuery('#editor').attr('contenteditable', 'true');
+  }
+
+  TextEditor.prototype.storableData = function() {
+    return jQuery(this.name + ' #editor')['0'].innerHTML;
+  }
+
+  TextEditor.prototype.storableDataN = function(n, dataObject) {
+    for (var i =0; i<n; i++) {
+      var className = this.name + i.toString();
+      var textEditor = new TextEditor(className);
+      dataObject[i] = textEditor.storableData();
+    }
+    return this;
+  }
+
+
   TextEditor.prototype.generateN = function(n, options) {
     var current_elem = $(this.name);
     var current_parent = current_elem.parent();
@@ -23,7 +57,7 @@ var TextEditor = function(containerName) {
   }
 
   TextEditor.prototype.persistData = function(data) {
-    $(this.name + ' #editor').append(data);
+    $(this.name + ' #editor')['0'].innerHTML = data;
     var _this = this;
     var parsed = $.parseHTML(data);
     var codeflask_objects = { }
@@ -86,8 +120,17 @@ var TextEditor = function(containerName) {
 
       var newElement = document.createElement('div');
       newElement.id = id;
-      my_parent = range.startContainer.parentNode.parentNode.id;
-      if(my_parent === "editor" || my_parent === strippedName) {
+      var my_parent = range.startContainer.parentNode;
+      var depth = 15;
+      var is_in_editor = false;
+      for(var i=0; i<depth; i++) {
+        if(my_parent.id === 'editor') {
+          is_in_editor = true;
+          break;
+        }
+        my_parent = my_parent.parentNode;
+      }
+      if(is_in_editor) {
         range.deleteContents();
         range.insertNode(newElement);
         var code_block = $('#'+id);
@@ -177,12 +220,18 @@ var TextEditor = function(containerName) {
   this.buildToolbar = function(toolbarOptions) {
 
     this.colorPalette = ['000000', 'FF9966', '6699FF', '99FF66', 'CC0000', '00CC00', '0000CC', '333333', '0066FF', 'FFFFFF'];
-    this.toolbarOptions = toolbarOptions || ["undo", "redo", "bold", "forecolor", "insertimage"];
+    this.toolbarOptions = toolbarOptions || ["code", "undo", "redo", "bold", "forecolor", "insertimage"];
 
     var appendString = '';
-    for(var option of this.toolbarOptions) {
-      appendString += this.toolbarElements[option];
-    };
+    if(this.toolbarOptions === "all") {
+      for (var element in this.toolbarElements) {
+        appendString += this.toolbarElements[element];
+      }
+    } else {
+      for(var option of this.toolbarOptions) {
+        appendString += this.toolbarElements[option];
+      };
+    }
     $(this.name + ' .toolbar').append(appendString);
     return this;
   }
@@ -190,14 +239,14 @@ var TextEditor = function(containerName) {
   this.show = function() {
 
 
-    if(this.toolbarOptions.indexOf("forecolor") != -1) {
+    if(this.toolbarOptions.indexOf("forecolor") != -1 || this.toolbarOptions === 'all') {
       this.forePalette = $(this.name + ' .fore-palette');
       for (var i = 0; i < this.colorPalette.length; i++) {
         this.forePalette.append('<a href="javascript:" data-command="forecolor" data-value="' + '#' + this.colorPalette[i] + '" style="background-color:' + '#' + this.colorPalette[i] + ';" class="palette-item"></a>');
       }
     }
 
-    if(this.toolbarOptions.indexOf("backcolor") != -1) {
+    if(this.toolbarOptions.indexOf("backcolor") != -1 || this.toolbarOptions === 'all') {
       this.forePalette = $(this.name + ' .fore-palette');
 
       this.backPalette = $(this.name + ' .back-palette');
@@ -206,7 +255,7 @@ var TextEditor = function(containerName) {
       }
     }
 
-    if(this.toolbarOptions.indexOf("code") != -1) {
+    if(this.toolbarOptions.indexOf("code") != -1 || this.toolbarOptions === 'all') {
       this.createCodeSelector();
       this.addCodelinkListeners()
     }
