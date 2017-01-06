@@ -149,7 +149,6 @@ a.palette-item:hover {
   top: -5;
   z-index: 1000;
 }
-/* NEW STYLES */
 .toolbar * {
   box-sizing: content-box;
 }

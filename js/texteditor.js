@@ -1,5 +1,6 @@
 var TextEditor = function(containerName) {
   //PROTOTYPE FUNCTIONS
+  //N text editors functions
   TextEditor.prototype.persistDataN = function(n, data) {
     for (var i=0; i < n; i++) {
       var className = this.name + i.toString();
@@ -20,9 +21,6 @@ var TextEditor = function(containerName) {
     jQuery('#editor').attr('contenteditable', 'true');
   }
 
-  TextEditor.prototype.storableData = function() {
-    return jQuery(this.name + ' #editor')['0'].innerHTML;
-  }
 
   TextEditor.prototype.storableDataN = function(n, dataObject) {
     for (var i =0; i<n; i++) {
@@ -35,7 +33,7 @@ var TextEditor = function(containerName) {
 
 
   TextEditor.prototype.generateN = function(n, options) {
-    var current_elem = $(this.name);
+    var current_elem = jQuery(this.name);
     var current_parent = current_elem.parent();
     this.count = n;
     current_elem.remove();
@@ -49,17 +47,22 @@ var TextEditor = function(containerName) {
   }
 
   TextEditor.prototype.singleToolbar = function() {
-    var fixed_toolbar = $(this.name + '0 .toolbar');
+    var fixed_toolbar = jQuery(this.name + '0 .toolbar');
     fixed_toolbar.addClass('fixed-toolbar');
     for (var i=1; i < this.count; i++) {
-      $(this.name + i.toString() + ' .toolbar').hide();
+      jQuery(this.name + i.toString() + ' .toolbar').hide();
     }
   }
 
+  // Single Text Editor Functions
+  TextEditor.prototype.storableData = function() {
+    return jQuery(this.name + ' #editor')['0'].innerHTML;
+  }
+
   TextEditor.prototype.persistData = function(data) {
-    $(this.name + ' #editor')['0'].innerHTML = data;
+    jQuery(this.name + ' #editor')['0'].innerHTML = data;
     var _this = this;
-    var parsed = $.parseHTML(data);
+    var parsed = jQuery.parseHTML(data);
     var codeflask_objects = { }
     for (var elem of parsed) {
       if (elem.className === 'CodeFlask') {
@@ -75,6 +78,9 @@ var TextEditor = function(containerName) {
     }
   }
 
+
+
+  //Common Functions
   TextEditor.prototype.getFlaskLanguage = function(elem) {
     try {
       for (var child of elem.children) {
@@ -92,17 +98,17 @@ var TextEditor = function(containerName) {
 
   TextEditor.prototype.addCodelinkListeners = function() {
     var _this = this;
-    $(this.name + ' .toolbar .code-wrapper').hover(function(){
+    jQuery(this.name + ' .toolbar .code-wrapper').hover(function(){
       try { _this.correct_range = window.getSelection().getRangeAt(0); }
       catch(e) { }
     })
-    $(this.name + ' .toolbar .code-wrapper .code-palette .language-link').click(function() {
-      _this.addCodeBlock(_this.languageMap[$(this).text()], _this.correct_range);
+    jQuery(this.name + ' .toolbar .code-wrapper .code-palette .language-link').click(function() {
+      _this.addCodeBlock(_this.languageMap[jQuery(this).text()], _this.correct_range);
     })
   }
 
   TextEditor.prototype.createCodeSelector = function() {
-    var codePalette = $(this.name + ' .toolbar .code-wrapper .code-palette')
+    var codePalette = jQuery(this.name + ' .toolbar .code-wrapper .code-palette')
     for(var language in this.languageMap) {
       codePalette.append('<div class = "language-link" >'+language+'</div>');
     }
@@ -133,7 +139,7 @@ var TextEditor = function(containerName) {
       if(is_in_editor) {
         range.deleteContents();
         range.insertNode(newElement);
-        var code_block = $('#'+id);
+        var code_block = jQuery('#'+id);
         code_block.height(100);
         code_block.css('border', '1px solid red');
         code_block.css('border-radius', '20px');
@@ -189,7 +195,7 @@ var TextEditor = function(containerName) {
   }
 
   TextEditor.prototype.buildFramework = function() {
-    $(this.name).append(
+    jQuery(this.name).append(
       '<div class="toolbar">'
         + '</div>'
         + '<div id="editor" contenteditable>'
@@ -232,7 +238,7 @@ var TextEditor = function(containerName) {
         appendString += this.toolbarElements[option];
       };
     }
-    $(this.name + ' .toolbar').append(appendString);
+    jQuery(this.name + ' .toolbar').append(appendString);
     return this;
   }
 
@@ -240,16 +246,16 @@ var TextEditor = function(containerName) {
 
 
     if(this.toolbarOptions.indexOf("forecolor") != -1 || this.toolbarOptions === 'all') {
-      this.forePalette = $(this.name + ' .fore-palette');
+      this.forePalette = jQuery(this.name + ' .fore-palette');
       for (var i = 0; i < this.colorPalette.length; i++) {
         this.forePalette.append('<a href="javascript:" data-command="forecolor" data-value="' + '#' + this.colorPalette[i] + '" style="background-color:' + '#' + this.colorPalette[i] + ';" class="palette-item"></a>');
       }
     }
 
     if(this.toolbarOptions.indexOf("backcolor") != -1 || this.toolbarOptions === 'all') {
-      this.forePalette = $(this.name + ' .fore-palette');
+      this.forePalette = jQuery(this.name + ' .fore-palette');
 
-      this.backPalette = $(this.name + ' .back-palette');
+      this.backPalette = jQuery(this.name + ' .back-palette');
       for (var i = 0; i < this.colorPalette.length; i++) {
         this.backPalette.append('<a href="javascript:" data-command="backcolor" data-value="' + '#' + this.colorPalette[i] + '" style="background-color:' + '#' + this.colorPalette[i] + ';" class="palette-item"></a>');
       }
@@ -262,19 +268,19 @@ var TextEditor = function(containerName) {
 
     var _this = this;
 
-    $(this.name + ' .toolbar a').click(function(e) {
-      var command = $(this).data('command');
+    jQuery(this.name + ' .toolbar a').click(function(e) {
+      var command = jQuery(this).data('command');
       if (command == 'h1' || command == 'h2' || command == 'p') {
         document.execCommand('formatBlock', false, command);
       }
       if (command == 'forecolor' || command == 'backcolor') {
-        document.execCommand($(this).data('command'), false, $(this).data('value'));
+        document.execCommand(jQuery(this).data('command'), false, jQuery(this).data('value'));
       }
       if (command == 'createlink' || command == 'insertimage') {
         url = prompt('Enter the link here: ', 'http:\/\/');
-        document.execCommand($(this).data('command'), false, url);
+        document.execCommand(jQuery(this).data('command'), false, url);
       } else {
-        document.execCommand($(this).data('command'), false, null);
+        document.execCommand(jQuery(this).data('command'), false, null);
       }
     });
 
