@@ -38,12 +38,12 @@
   var textEditor = new TextEditor('.main-container');
   textEditor.generateN(2, ['code', 'forecolor', 'backcolor', 'unlink']);
   ```
-  Creates 2 textEditors with classes main-container0 and main-container1. Since the text editors are appended to the parent element, it is good practice to surround the main-container div with some sort of parent div that contains all the text editors.
-  2. textEditor.singleToolbar() removes all the extra toolbars of each textEditor and makes the toolbar fixed to the center of the page.
-  3. textEditor.storableDataN(n, dataObject) takes the number of text editors (n) and populates the data object with the data from each of the text editors.
-  4. textEditor.persistDataN(n, data) takes the data object returned by the storableDataN function and the number of textEditors and populates the right text editor with the right data.
-  5. textEditor.displayMode() removes the ability to edit the text editors and hides all toolbars.
-  6. textEditor.makeEditable() reverses the effects of textEditor.displayMode() and reintroduces a single toolbar.
+  Creates 2 textEditors with classes main-container0 and main-container1. Since the text editors are appended to the parent element, it is good practice to surround the main-container div with some sort of parent div that contains all the text editors.  
+  2. textEditor.singleToolbar() removes all the extra toolbars of each textEditor and makes the toolbar fixed to the center of the page.  
+  3. textEditor.storableDataN(n, dataObject) takes the number of text editors (n) and populates the data object with the data from each of the text editors.  
+  4. textEditor.persistDataN(n, data) takes the data object returned by the storableDataN function and the number of textEditors and populates the right text editor with the right data.  
+  5. textEditor.displayMode() removes the ability to edit the text editors and hides all toolbars.  
+  6. textEditor.makeEditable() reverses the effects of textEditor.displayMode() and reintroduces a single toolbar.  
 
 # Attributions
 Skeleton code taken from https://code.tutsplus.com/tutorials/create-a-wysiwyg-editor-with-the-contenteditable-attribute--cms-25657
