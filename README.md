@@ -6,7 +6,7 @@
 4. Extract data in a form that can be saved in a Mongo Database
 
 
-#Progress
+# Progress
 1. Created an object TextEditor which can be flexibly used to rapidly generate multiple rich-text editors. To do so, follow these steps: 
   1. Add html for the container within which you want the TextEditor. 
       eg:  
